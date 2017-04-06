@@ -11,10 +11,9 @@
 </template>
 
 <script>
-    require('./css/main.css')
-    import game from './js/game'
-    game.init();
-
+    //    import main from './js/main'
+    //    import game from './js/game'
+    import me from '../../main.js'
     export default {
         data() {
             return {}
@@ -22,7 +21,9 @@
 
 
         mounted: function() {
-            console.log('2d')
+            console.log(window.me.$store.state.a)
+            //            console.log(me.$store.state.a)
+            //            game.init();
         },
         methods: {
 
@@ -31,7 +32,7 @@
 
 </script>
 
-<style>
+<style scoped="true" src="./css/main.css">
 
 
 </style>

@@ -6,7 +6,7 @@ var img = {
             i = 0;
         me.number = 0;
         //判断是对象且不是数组（数组是对象的子集，比对象多一些方法，比如length）
-        for (k in img) {
+        for (var k in img) {
             if (typeof (img[k]) == "object" && typeof (img[k].length) != "number") {
                 img[k] = new Image();
 

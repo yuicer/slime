@@ -3,6 +3,7 @@
 </template>
 
 <script>
+    var THREE = require('../../../static/three.min.js')
     export default {
         data() {
             return {}

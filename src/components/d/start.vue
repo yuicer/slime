@@ -12,8 +12,7 @@
         },
         methods: {
             jump: function() {
-                //                this.$router.push('./one')
-                location.href = '../2d/index'
+                this.$router.push('./two')
             }
         }
     }

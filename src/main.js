@@ -51,6 +51,7 @@ const store = new VueX.Store({
         material: [],
         mesh: [],
         light: [],
+        a: 1,
     },
     mutations: {
         set(state, {
@@ -67,7 +68,7 @@ const store = new VueX.Store({
 //	value: 'lala'
 //	})
 /* eslint-disable no-new */
-new Vue({
+var me = new Vue({
     el: '#app',
     router,
     store,
@@ -76,3 +77,6 @@ new Vue({
         App
     }
 })
+
+//export default me;
+window.me = me;
