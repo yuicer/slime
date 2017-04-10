@@ -11,9 +11,8 @@
 </template>
 
 <script>
-    //    import main from './js/main'
-    //    import game from './js/game'
-    import me from '../../main.js'
+    import f from './js/main'
+    import game from './js/game'
     export default {
         data() {
             return {}
@@ -21,9 +20,10 @@
 
 
         mounted: function() {
-            console.log(window.me.$store.state.a)
-            //            console.log(me.$store.state.a)
-            //            game.init();
+            setTimeout(function() {
+                game.init();
+                f()
+            }, 1)
         },
         methods: {
 

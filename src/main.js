@@ -68,7 +68,7 @@ const store = new VueX.Store({
 //	value: 'lala'
 //	})
 /* eslint-disable no-new */
-var me = new Vue({
+export default new Vue({
     el: '#app',
     router,
     store,
@@ -77,6 +77,3 @@ var me = new Vue({
         App
     }
 })
-
-//export default me;
-window.me = me;

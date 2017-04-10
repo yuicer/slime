@@ -1,3 +1,6 @@
+import game from './game'
+import slime from './slime'
+import img from './img'
 var yuusya = {
     //勇者宽度
     died: false,
@@ -31,7 +34,7 @@ var yuusya = {
     arrow_state: -1,
     init: function () {
         var me = yuusya;
-        me.canvas = $("canvas");
+        me.canvas = document.getElementById("canvas");
         me.ctx = game.ctx;
         me.died = false;
         me.width = 35;

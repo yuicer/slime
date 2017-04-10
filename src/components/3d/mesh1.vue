@@ -3,13 +3,12 @@
 </template>
 
 <script>
-    var THREE = require('../../../static/three.min.js')
+    var THREE = require('static/three.min.js')
     export default {
         data() {
             return {}
         },
         mounted: function() {
-            console.log(3)
             var me = this;
             me.get_mesh();
         },

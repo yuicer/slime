@@ -10,6 +10,9 @@
         data() {
             return {}
         },
+        mounted: function() {
+
+        },
         methods: {
             jump: function() {
                 this.$router.push('./two')

@@ -1,6 +1,6 @@
 import img from './img.js'
 import slime from './slime.js'
-import yuusya from './yuusha.js'
+import yuusya from './yuusya.js'
 var game = {
     ctx: {},
     timer: 0,

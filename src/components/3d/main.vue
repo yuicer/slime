@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    //    var THREE = require('../../../static/three.min.js')
+    var THREE = require('static/three.min.js')
     import light from './light.vue'
     import mesh1 from './mesh1.vue'
     export default {

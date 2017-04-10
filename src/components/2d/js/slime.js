@@ -1,3 +1,6 @@
+import game from './game'
+import yuusya from './yuusya'
+import img from './img'
 var slime = {
     canvas: {},
     ctx: {},

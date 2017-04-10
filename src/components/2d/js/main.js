@@ -1,11 +1,12 @@
 //import game from './game'
 //game.init();
-import me from '../../../main.js'
+//import me from '../../../main.js'
+import a from 'src/main.js'
 var f = function () {
+    for (var i = 0; i < 1; i++) {
 
-    console.log(me.$store.state)
-
-    var c = document.getElementById('canvas')
-    console.log(c)
+        var img = require('../game_img/bg.jpg')
+        console.log(img)
+    }
 }
 export default f;
