@@ -44,14 +44,13 @@ const router = new VueRouter({
 
 const store = new VueX.Store({
     state: {
-        scene: {},
+        scene: new THREE.Scene(),
         camera: {},
         renderer: {},
         geometry: [],
         material: [],
         mesh: [],
         light: [],
-        a: 1,
     },
     mutations: {
         set(state, {

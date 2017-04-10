@@ -15,7 +15,7 @@
         },
         methods: {
             jump: function() {
-                this.$router.push('./two')
+                this.$router.push('./one')
             }
         }
     }

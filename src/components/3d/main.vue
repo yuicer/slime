@@ -7,7 +7,6 @@
 </template>
 
 <script>
-    var THREE = require('static/three.min.js')
     import light from './light.vue'
     import mesh1 from './mesh1.vue'
     export default {
@@ -29,7 +28,7 @@
                 var me = this;
 
                 //init scene
-                me.$store.state.scene = new THREE.Scene();
+                //                me.$store.state.scene = new THREE.Scene();
 
                 //set camera
                 me.$store.state.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
@@ -60,7 +59,7 @@
 
                 requestAnimationFrame(me.animate);
                 for (let i = 0; i < me.$store.state.mesh.length; i++) {
-                    me.$store.state.mesh[i].rotation.x += 0.01;
+                    //                    me.$store.state.mesh[i].rotation.x += 0.01;
                     me.$store.state.mesh[i].rotation.y += 0.01;
                 }
 
