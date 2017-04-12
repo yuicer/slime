@@ -1,8 +1,7 @@
 <template>
-    <div id="box" :class="{up:position,down:!position}">
+    <div id="box" :class="{up:direct == 'up',down:direct == 'down'}">
     <section>
-<!--    	<div>{{text}}</div>-->
-    	{{charector}}
+    	<div>{{text}}</div>
     </section>
     </div>
 </template>
@@ -13,45 +12,45 @@
 		data() {
 			return {
 				text: "",
-				time: 100,
+				time: 150,
 				now_text: [],
 			}
 		},
-		props: ['position', 'charector'],
+		props: ['direct', 'chaptor', 'section', 'speed'],
 		mounted: function() {
 			var me = this;
 
 
 		},
 		watch: {
-			charector: function() {
+			section: function() {
 				var me = this;
 				//保存一次会话的数组
-				console.log(this.charector)
-				me.now_text = text[0][this.charector];
-				me.Even();
+				me.now_text = text[this.chaptor][this.section];
+				me.Even(0);
 
 			}
 		},
 		methods: {
 
 			//匀速出现字
-			Even: function() {
+			Even: function(i) {
 				var me = this;
+				me.text = ""
 				var d = setInterval(function() {
-
-					for (let i = 0, l = me.now_text.length; i < l; i++) {
-
-						me.text += me.now_text[i].slice(0, 1);
-						me.now_text[i] = me.now_text[0].slice(1);
-						if (me.now_text[i].length < 1) {
-							me.text = ""
-						}
-
-						if (i == l)
-							clearInterval(d);
+					me.text += me.now_text[i].slice(0, 1);
+					me.now_text[i] = me.now_text[i].slice(1);
+					//一个字符串打完了
+					if (me.now_text[i].length < 1) {
+						//循环控制
+						if (me.now_text.length > i + 1)
+							setTimeout(function() {
+								me.Even(i + 1);
+							}, 1000)
+						clearInterval(d);
 					}
-				}, me.time)
+				}, me.speed)
+
 			},
 			//变速出现字
 			Gradient: function(speed) {
@@ -71,18 +70,23 @@
 <style scoped="true">
 	#box {
 		width: 100vw;
-		height: 18vh;
+		height: 16vh;
 		background: rgba(0, 0, 0, .7);
+		display: flex;
+		padding: 2vh;
 	}
 	
 	section {
 		width: 60vw;
-		height: 100%;
-		margin: 0 auto;
+		height: 80%;
+		margin: auto;
+		padding: 1.5vh;
 		text-align: left;
-		/*		text-indent: 48px;*/
+		border: 2px solid white;
+		text-indent: 48px;
 		font-size: 24px;
 		color: white;
+		overflow: auto;
 	}
 	
 	section>div {

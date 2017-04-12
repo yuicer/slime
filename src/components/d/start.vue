@@ -1,30 +1,25 @@
 <template>
     <div>
-        <kaiwa :position="true" :charector="charector"></kaiwa>
         <img src="../../assets/d/slime.png" alt="">
         <h1 @click="jump">start</h1>
-        <kaiwa :position="false"></kaiwa>
     </div>
 </template>
 
 <script>
-	import kaiwa from './kaiwa.vue'
 	export default {
 		data() {
 			return {
-				charector: ""
+
 			}
 		},
-		components: {
-			kaiwa
-		},
+
 		mounted: function() {
 
 		},
 		methods: {
 			jump: function() {
-				//				this.$router.push('./one')
-				this.charector = "one";
+				this.$router.push('./one')
+
 			}
 		}
 	}
@@ -41,6 +36,7 @@
 	
 	div>img {
 		margin-top: 250px;
+		/*		visibility: hidden;*/
 	}
 
 </style>
