@@ -1,24 +1,22 @@
 <template>
     <div>
-        <img src="../../assets/d/slime.png" alt="">
+        <img src="~assets/d/slime.png" alt="">
         <h1 @click="jump">start</h1>
     </div>
 </template>
 
 <script>
 	export default {
+		name: 'start',
 		data() {
 			return {
 
 			}
 		},
 
-		mounted: function() {
-
-		},
 		methods: {
 			jump: function() {
-				this.$router.push('./one')
+				this.$router.push('./game')
 
 			}
 		}

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import text from './text.js'
+	import text from 'src/script/text.js'
 	export default {
 		data() {
 			return {

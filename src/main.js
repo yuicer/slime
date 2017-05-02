@@ -5,9 +5,9 @@ import VueRouter from 'vue-router'
 import VueX from 'vuex'
 
 import App from './App'
-import Start from './components/d/start'
-import Game from './components/3d/main'
-import Fight from './components/2d/main'
+const Start = resolve => require(['components/start'], resolve)
+const Game = resolve => require(['components/3d/main'], resolve)
+const Fight = resolve => require(['components/2d/main'], resolve)
 
 Vue.config.productionTip = false
 //全局状态管理
@@ -16,63 +16,40 @@ Vue.use(VueX)
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-    routes: [
-        {
-            path: '/',
-            component: Start,
+	routes: [
+		{
+			path: '/',
+			component: Start,
              },
-        {
-            path: '/one',
-            component: Game,
-        }, {
-            path: '/two',
-            component: Fight,
+		{
+			path: '/game',
+			component: Game,
+        	},
+		{
+			path: '/game_fight',
+			component: Fight,
         }
     ],
-    //		切换页面自动上滑
-    scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return {
-                x: 0,
-                y: 0
-            }
-        }
-    }
 })
 
 const store = new VueX.Store({
-    state: {
-        scene: new THREE.Scene(),
-        camera: {},
-        renderer: {},
-        geometry: [],
-        material: [],
-        mesh: [],
-        light: [],
-    },
-    mutations: {
-        set(state, {
-            obj,
-            value
-        }) {
-            for (let i = 0, l = obj.length; i < l; i++)
-                state[obj[i]] = value[i];
-        },
-    },
+	state: {
+		scene: new THREE.Scene(),
+		camera: {},
+		renderer: {},
+		geometry: [],
+		material: [],
+		mesh: [],
+		light: [],
+	},
 })
-//this.$store.commit('set', {
-//	obj: 'test2',
-//	value: 'lala'
-//	})
-/* eslint-disable no-new */
+
 export default new Vue({
-    el: '#app',
-    router,
-    store,
-    template: '<App/>',
-    components: {
-        App
-    }
+	el: '#app',
+	router,
+	store,
+	template: '<App/>',
+	components: {
+		App
+	}
 })

@@ -11,24 +11,23 @@
 </template>
 
 <script>
-    import f from './js/main'
-    import game from './js/game'
-    export default {
-        data() {
-            return {}
-        },
+	import f from './js/main'
+	import game from './js/game'
+	export default {
+		name: 'fight',
+		data() {
+			return {}
+		},
+		mounted: function() {
+			setTimeout(function() {
+				game.init();
+				f()
+			}, 1)
+		},
+		methods: {
 
-
-        mounted: function() {
-            setTimeout(function() {
-                game.init();
-                f()
-            }, 1)
-        },
-        methods: {
-
-        }
-    }
+		}
+	}
 
 </script>
 
