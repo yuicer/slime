@@ -1,4 +1,5 @@
 import vm from 'src/main.js'
+var vs = vm.$store.state;
 var mesh1 = {
 	get_mesh: function () {
 		var tt,
@@ -19,8 +20,8 @@ var mesh1 = {
 			});
 			obj.position.y = -500;
 			obj.scale.set(6, 6, 6);
-			vm.$store.state.mesh[0] = obj;
-			vm.$store.state.scene.add(obj);
+			vs.mesh[0] = obj;
+			vs.scene.add(obj);
 		})
 	},
 }

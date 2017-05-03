@@ -42,7 +42,7 @@
 					me.now_text[i] = me.now_text[i].slice(1);
 					//一个字符串打完了
 					if (me.now_text[i].length < 1) {
-						//循环控制
+						//循环控制,判断有没有下一句话
 						if (me.now_text.length > i + 1)
 							setTimeout(function() {
 								me.Even(i + 1);
