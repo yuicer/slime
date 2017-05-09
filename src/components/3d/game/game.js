@@ -25,7 +25,7 @@ var game = {
 		});
 		vs.renderer.setSize(window.innerWidth, window.innerHeight);
 		vs.renderer.shadowMap.enabled = true;
-
+		vs.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	},
 	animate: function () {
 		//		for (let i = 0; i < vs.mesh.length; i++) {
