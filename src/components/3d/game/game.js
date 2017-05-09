@@ -5,8 +5,9 @@ var game = {
 		//init scene
 
 		//set camera
-		vs.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-		vs.camera.position.z = 1000;
+		vs.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+		vs.camera.position.z = 80;
+		vs.camera.position.y = 40;
 
 		//add light
 		for (let i = 0; i < vs.light.length; i++) {
@@ -23,16 +24,16 @@ var game = {
 			canvas: document.getElementById("3d_canvas")
 		});
 		vs.renderer.setSize(window.innerWidth, window.innerHeight);
-		vs.renderer.setClearColor('black')
+		vs.renderer.shadowMap.enabled = true;
 
 	},
 	animate: function () {
-		requestAnimationFrame(game.animate);
-		for (let i = 0; i < vs.mesh.length; i++) {
-			vs.mesh[i].rotation.y += 0.01;
-		}
-
+		//		for (let i = 0; i < vs.mesh.length; i++) {
+		//			vs.mesh[i].rotation.y += 0.01;
+		//		}
+		vs.scene.simulate();
 		vs.renderer.render(vs.scene, vs.camera);
+		requestAnimationFrame(game.animate);
 	}
 }
 

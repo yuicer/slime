@@ -71,8 +71,7 @@
 	#box {
 		width: 100vw;
 		height: 16vh;
-		background: rgba(0, 0, 0, .7);
-		display: flex;
+		background: translate;
 		padding: 2vh;
 	}
 	

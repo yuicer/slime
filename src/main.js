@@ -34,7 +34,8 @@ const router = new VueRouter({
 
 const store = new VueX.Store({
 	state: {
-		scene: new THREE.Scene(),
+		//		scene: new THREE.Scene(), 
+		scene: new Physijs.Scene,
 		camera: {},
 		renderer: {},
 		geometry: [],
