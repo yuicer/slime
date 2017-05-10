@@ -65,48 +65,73 @@ var mesh1 = {
 		//		ground3.position.y = 50;
 		//		ground3.receiveShadow = true;
 		//		vs.mesh.push(ground3);
-		var box = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(20, 20, 20),
+		var geo = new THREE.BoxGeometry(10, 10, 10);
+		geo.vertices[0].x = -5;
+		geo.vertices[1].x = -5;
+		//		for (let i = 0, l = geo.vertices.length; i < l; i++) {
+		//			geo.vertices[i].z += 5;
+		//		}
+		var box = new Physijs.ConvexMesh(
+			geo,
 			box_material,
 		);
-		box.position.y = 100;
+		box.position.y = 80;
+		box.position.x = 0;
 		box.castShadow = true;
 		box.receiveShadow = true;
 		vs.mesh.push(box);
 
+		var box2 = new Physijs.ConvexMesh(
+			geo,
+			box_material,
+		);
+		box2.position.y = 60;
+		box2.position.x = 0;
+		box2.castShadow = true;
+		box2.receiveShadow = true;
+		vs.mesh.push(box2);
+
+		var box1 = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(10, 10, 10),
+			box_material,
+		);
+		box1.position.y = 100;
+		box1.castShadow = true;
+		box1.receiveShadow = true;
+		//		vs.mesh.push(box1);
 		mesh1.init()
+		//		mesh1.test()
 
 
 
 	},
 	init: function () {
-		//		container = document.createElement('div');
-		//		document.body.appendChild(container);
-		//
-		//		scene = new THREE.Scene();
-		//
-		//		camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-		//		camera.position.z = 750;
-		//		scene.add(camera);
-		//
-		//		var light = new THREE.PointLight(0xffffff, 0.8);
-		//		camera.add(light);
+		var box = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(10, 10, 10),
+			new THREE.MeshNormalMaterial(),
 
-		var group = new THREE.Group();
-		group.position.y = 50;
-		group.scale.set(.1, .1, .1)
-		vs.scene.add(group);
+		);
+		box.position.y = 10;
+		vs.mesh.push(box);
 
 		function addShape(shape, extrudeSettings, color, x, y, z, rx, ry, rz, s) {
 			var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-
+			for (let i = 0, l = geometry.vertices.length; i < l; i++) {
+				geometry.vertices[i].x *= 0.2;
+				geometry.vertices[i].y *= 0.2;
+				geometry.vertices[i].z *= 0.2;
+			}
 			var meshMaterial = new THREE.MeshNormalMaterial();
-			var mesh = new THREE.Mesh(geometry, meshMaterial);
+			var mesh = new Physijs.ConvexMesh(geometry, meshMaterial);
 
 			mesh.position.set(x, y, z);
 			mesh.rotation.set(rx, ry, rz);
-			mesh.scale.set(s, s, s);
-			group.add(mesh);
+			//			mesh.scale.set(s, s, s);
+			//			mesh.scale.set(.2, .2, .2)
+			mesh.position.y = 20;
+			mesh.castShadow = true;
+			box.add(mesh);
+			//			vs.mesh.push(mesh)
 		}
 
 		var hexShape = new THREE.Shape();
@@ -117,14 +142,14 @@ var mesh1 = {
 		hexShape.lineTo(-0.4, 0.5);
 		hexShape.lineTo(0, 0.8);
 
-		var numberOfCrystals = 100;
+		var numberOfCrystals = 1;
 		for (let i = 0; i < numberOfCrystals; i++) {
 			var extrudeSettings = {
 				amount: Math.random() * 200,
 				bevelEnabled: true,
 				bevelSegments: 1,
 				steps: 1,
-				bevelSize: (Math.random() * 10) + 15,
+				bevelSize: (Math.random() * 10) + 10,
 				bevelThickness: (Math.random() * 10) + 25
 			};
 
@@ -141,20 +166,37 @@ var mesh1 = {
 				1
 			);
 		}
-		//
-		//		renderer = new THREE.WebGLRenderer({
-		//			antialias: true
-		//		});
-		//		renderer.setClearColor(0x000000);
-		//		renderer.setPixelRatio(window.devicePixelRatio);
-		//		renderer.setSize(window.innerWidth, window.innerHeight);
-		//		container.appendChild(renderer.domElement);
-		//
-		//		document.addEventListener('mousedown', onDocumentMouseDown, false);
-		//		document.addEventListener('touchstart', onDocumentTouchStart, false);
-		//		document.addEventListener('touchmove', onDocumentTouchMove, false);
-		//
-		//		window.addEventListener('resize', onWindowResize, false);
+
+	},
+	test: function () {
+		// Materials
+		var ground_material = Physijs.createMaterial(
+			new THREE.MeshLambertMaterial({}),
+			.8, // high friction
+			.4 // low restitution
+		);
+		//		ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
+		//		ground_material.map.repeat.set(2.5, 2.5);
+
+		var ground_geometry = new THREE.PlaneGeometry(75, 75, 50, 50);
+		for (var i = 0; i < ground_geometry.vertices.length; i++) {
+			var vertex = ground_geometry.vertices[i];
+			vertex.z = Math.random() * 5
+
+		}
+		ground_geometry.computeFaceNormals();
+		ground_geometry.computeVertexNormals();
+
+		var ground = new Physijs.ConcaveMesh(
+			ground_geometry,
+			ground_material,
+			0, // mass
+		);
+		ground.rotation.x = Math.PI / -2;
+		ground.scale.set(2, 2, 2)
+		ground.receiveShadow = true;
+		ground.position.y = 30;
+		vs.mesh.push(ground)
 	}
 }
 
