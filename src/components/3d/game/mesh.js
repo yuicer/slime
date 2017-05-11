@@ -1,13 +1,28 @@
 import vm from 'src/main.js'
 var vs = vm.$store.state;
-var mesh1 = {
-	get_mesh: function () {
+var mesh = {
+	init: function () {
+		this.static_box();
+		this.ground();
+		//		this.crystal();
+	},
+	static_box: function () {
+		var box = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(4, 4, 4),
+			new THREE.MeshNormalMaterial(),
+
+		);
+		box.castShadow = true;
+		box.receiveShadow = true;
+		box.position.y = 4;
+		vs.mesh.push(box);
+	},
+	ground: function () {
 		// Loader
 		var loader = new THREE.TextureLoader();
 
 		// Materials
 		var img1 = require('assets/3d/rocks.jpg')
-		var img2 = require('assets/3d/plywood.jpg')
 		var ground_material = Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
 				map: loader.load(img1),
@@ -19,6 +34,22 @@ var mesh1 = {
 		);
 		ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
 		ground_material.map.repeat.set(3, 3);
+		// Ground
+		var ground = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(100, 1, 100),
+			ground_material,
+			0 // mass
+		);
+		ground.receiveShadow = true;
+		vs.mesh.push(ground);
+	},
+	get_mesh: function () {
+		// Loader
+		var loader = new THREE.TextureLoader();
+
+		// Materials
+		var img2 = require('assets/3d/plywood.jpg')
+
 
 		var box_material = Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
@@ -31,40 +62,6 @@ var mesh1 = {
 		box_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
 		box_material.map.repeat.set(.25, .25);
 
-		// Ground
-		var ground = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(100, 1, 100),
-			ground_material,
-			0 // mass
-		);
-		ground.receiveShadow = true;
-		vs.mesh.push(ground);
-		//		var ground1 = new Physijs.BoxMesh(
-		//			new THREE.BoxGeometry(100, 1, 100),
-		//			ground_material,
-		//			0 // mass
-		//		);
-		//		ground1.position.y = 100;
-		//		ground1.receiveShadow = true;
-		//		vs.mesh.push(ground1);
-		//		var ground2 = new Physijs.BoxMesh(
-		//			new THREE.BoxGeometry(1, 100, 100),
-		//			ground_material,
-		//			0 // mass
-		//		);
-		//		ground2.position.x = 50;
-		//		ground2.position.y = 50;
-		//		ground2.receiveShadow = true;
-		//		vs.mesh.push(ground2);
-		//		var ground3 = new Physijs.BoxMesh(
-		//			new THREE.BoxGeometry(1, 100, 100),
-		//			ground_material,
-		//			0 // mass
-		//		);
-		//		ground3.position.x = -50;
-		//		ground3.position.y = 50;
-		//		ground3.receiveShadow = true;
-		//		vs.mesh.push(ground3);
 		var geo = new THREE.BoxGeometry(10, 10, 10);
 		geo.vertices[0].x = -5;
 		geo.vertices[1].x = -5;
@@ -98,21 +95,20 @@ var mesh1 = {
 		box1.position.y = 100;
 		box1.castShadow = true;
 		box1.receiveShadow = true;
-		//		vs.mesh.push(box1);
-		mesh1.init()
-		//		mesh1.test()
+		vs.mesh.push(box1);
+
 
 
 
 	},
-	init: function () {
-		var box = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(10, 10, 10),
-			new THREE.MeshNormalMaterial(),
-
-		);
-		box.position.y = 10;
-		vs.mesh.push(box);
+	crystal: function () {
+		//		var box = new Physijs.BoxMesh(
+		//			new THREE.BoxGeometry(10, 10, 10),
+		//			new THREE.MeshNormalMaterial(),
+		//
+		//		);
+		//		box.position.y = 10;
+		//		vs.mesh.push(box);
 
 		function addShape(shape, extrudeSettings, color, x, y, z, rx, ry, rz, s) {
 			var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
@@ -130,8 +126,8 @@ var mesh1 = {
 			//			mesh.scale.set(.2, .2, .2)
 			mesh.position.y = 20;
 			mesh.castShadow = true;
-			box.add(mesh);
-			//			vs.mesh.push(mesh)
+			//			box.add(mesh);
+			vs.mesh.push(mesh)
 		}
 
 		var hexShape = new THREE.Shape();
@@ -242,4 +238,4 @@ var mesh1 = {
 //			//			}
 //		})
 
-export default mesh1;
+export default mesh;

@@ -1,7 +1,7 @@
 import vm from 'src/main.js'
 var vs = vm.$store.state;
 var light = {
-	get_light: function () {
+	init: function () {
 		vs.light[0] = new THREE.DirectionalLight(0xfaeaef);
 		vs.light[0].position.set(20, 40, 0);
 		//		vs.light[0].target.position.copy(vs.scene.position);
@@ -10,7 +10,7 @@ var light = {
 		vs.light[0].shadow.camera.top = -160;
 		vs.light[0].shadow.camera.right = 160;
 		vs.light[0].shadow.camera.bottom = 160;
-		vs.light[0].shadowMapWidth = vs.light[0].shadowMapHeight = 1024;
+		vs.light[0].shadow.mapSize.width = vs.light[0].shadow.mapSize.height = 1024;
 
 
 		//		vs.light[0].shadow.bias = -.0001
