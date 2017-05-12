@@ -5,16 +5,36 @@ var mesh = {
 		this.static_box();
 		this.ground();
 		//		this.crystal();
+		this.get_box();
+
 	},
 	static_box: function () {
+		var loader = new THREE.TextureLoader();
+
+		// Materials
+		var img2 = require('assets/3d/plywood.jpg')
+
+
+		var box_material = Physijs.createMaterial(
+			new THREE.MeshLambertMaterial({
+				map: loader.load(img2),
+				side: THREE.DoubleSide
+			}),
+			.4, // low friction
+			.1 // high restitution
+		);
+		box_material.map.wrapS = box_material.map.wrapT = THREE.RepeatWrapping;
+		box_material.map.repeat.set(.25, .25);
 		var box = new Physijs.BoxMesh(
 			new THREE.BoxGeometry(4, 4, 4),
-			new THREE.MeshNormalMaterial(),
+			box_material,
+			0
+			//			new THREE.MeshNormalMaterial(),
 
 		);
 		box.castShadow = true;
 		box.receiveShadow = true;
-		box.position.y = 4;
+		box.position.set(0, 4, -1)
 		vs.mesh.push(box);
 	},
 	ground: function () {
@@ -36,14 +56,14 @@ var mesh = {
 		ground_material.map.repeat.set(3, 3);
 		// Ground
 		var ground = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(100, 1, 100),
+			new THREE.BoxGeometry(1000, 1, 1000),
 			ground_material,
 			0 // mass
 		);
 		ground.receiveShadow = true;
 		vs.mesh.push(ground);
 	},
-	get_mesh: function () {
+	get_box: function () {
 		// Loader
 		var loader = new THREE.TextureLoader();
 
@@ -59,7 +79,7 @@ var mesh = {
 			.4, // low friction
 			.1 // high restitution
 		);
-		box_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
+		box_material.map.wrapS = box_material.map.wrapT = THREE.RepeatWrapping;
 		box_material.map.repeat.set(.25, .25);
 
 		var geo = new THREE.BoxGeometry(10, 10, 10);

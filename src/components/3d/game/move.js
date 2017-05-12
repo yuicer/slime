@@ -3,15 +3,23 @@ var vs = vm.$store.state;
 
 var move = {
 	yuusya: {},
+	dom: {},
+	event: [],
+
+	//move
+	move_speed: 0.3,
 	left: false,
 	right: false,
 	forward: false,
 	back: false,
 	move: false,
-	event: [],
-	speed: 0.3,
-	dom: {},
-	angel: 0,
+
+	//rotate
+	angelX: 0,
+	angelY: 0,
+	//		上一步的鼠标位置
+	mouse_vector: new THREE.Vector3(0, 0, 0),
+	rotate_speed: 0.003,
 
 	init: function () {
 		//init const
@@ -25,48 +33,37 @@ var move = {
 
 	},
 
-	applyForce: function () {
-		var mouse_position = new THREE.Vector3(4, 4, 4);
-		var me = this;
-		var strength = 35,
-			distance, effect, offset, box;
-
-		box = vs.mesh[0];
-		distance = mouse_position.distanceTo(box.position),
-			effect = mouse_position.clone().sub(box.position).normalize().multiplyScalar(strength / distance).negate(),
-			offset = mouse_position.clone().sub(box.position);
-		box.applyImpulse(effect, offset);
-		//		console.log(box.position, mouse_position)
-
-	},
 	action: function () {
 		var me = move;
 
+		me.yuusya.__dirtyPosition = true;
+		me.yuusya.__dirtyRotation = true;
+		//移动
 		if (me.move) {
-			me.yuusya.__dirtyPosition = true;
-			var _c = Math.sqrt(Math.pow(me.yuusya.position.x, 2) + Math.pow(me.yuusya.position.z, 2)),
-				cos,
-				sin;
-			if (!_c) {
-				cos = sin = 0;
-			} else {
-				cos = (me.yuusya.position.x + me.speed) / _c
-				sin = (me.yuusya.position.z + me.speed) / _c
+			var vector;
+			if (me.forward) {
+				vector = new THREE.Vector3(-Math.sin(me.angelX) * me.move_speed, 0, -Math.cos(me.angelX) * me.move_speed)
 			}
 			if (me.left) {
-				me.yuusya.position.x += -me.speed;
-			}
-			if (me.forward) {
-				me.yuusya.position.z += -me.speed;
+				vector = new THREE.Vector3(-Math.sin(me.angelX + Math.PI / 2) * me.move_speed, 0, -Math.cos(me.angelX + Math.PI / 2) * me.move_speed)
 			}
 			if (me.right) {
-				me.yuusya.position.x += me.speed;
+				vector = new THREE.Vector3(-Math.sin(me.angelX - Math.PI / 2) * me.move_speed, 0, -Math.cos(me.angelX - Math.PI / 2) * me.move_speed)
 			}
 			if (me.back) {
-
-				me.applyForce();
-				//				me.yuusya.position.set(me.yuusya.position.x + me.speed * cos, me.yuusya.position.y, me.yuusya.position.z + me.speed * sin);
+				vector = new THREE.Vector3(Math.sin(me.angelX) * me.move_speed, 0, Math.cos(me.angelX) * me.move_speed)
 			}
+
+			me.yuusya.position.add(vector);
+
+		}
+		//转动,鼠标移到边缘后一直转动
+		if (me.mouse_vector.x > 0.9) {
+			me.yuusya.rotation.set(me.angelY, me.angelX, 0)
+			me.angelX -= (Math.PI / 2) * me.rotate_speed * 6;
+		} else if (me.mouse_vector.x < -0.9) {
+			me.angelX += (Math.PI / 2) * me.rotate_speed * 6;
+			me.yuusya.rotation.set(me.angelY, me.angelX, 0)
 		}
 	},
 	keyboard: function () {
@@ -114,13 +111,45 @@ var move = {
 	mouse: function () {
 		var me = this;
 		me.dom.addEventListener('mousemove', function (event) {
+			me.yuusya.__dirtyPosition = true;
 			me.yuusya.__dirtyRotation = true;
+			var vector = new THREE.Vector3((event.clientX / me.dom.clientWidth) * 2 - 1, -((event.clientY / me.dom.clientHeight) * 2 - 1), 0);
+			//角度控制
+			if (vector.x > me.mouse_vector.x && vector.x <= 0.9)
+				me.angelX -= (Math.PI / 2) * me.rotate_speed;
+			else if (vector.x < me.mouse_vector.x && vector.x >= -0.9)
+				me.angelX += (Math.PI / 2) * me.rotate_speed;
 
-			me.yuusya.rotation.set(0, me.angel, 0)
-			me.angel += (Math.PI / 2) * .001;
+			if (vector.y > me.mouse_vector.y) {
+				me.angelY += (Math.PI / 2) * me.rotate_speed / 2;
+				if (me.angelY > Math.PI / 6)
+					me.angelY = Math.PI / 6
 
+			} else if (vector.y < me.mouse_vector.y) {
+				me.angelY -= (Math.PI / 2) * me.rotate_speed / 2;
+				if (me.angelY < -Math.PI / 6)
+					me.angelY = -Math.PI / 6
+			}
+
+			me.yuusya.rotation.set(me.angelY, me.angelX, 0)
+			me.mouse_vector = vector;
+			//			console.log(me.yuusya)
 		})
 	},
 }
 
 export default move;
+
+//	applyForce: function () {
+//		var mouse_position = new THREE.Vector3(1, 1, 1);
+//		var me = this;
+//		var strength = 1235,
+//			distance, effect, offset, box;
+//
+//		box = vs.mesh[0];
+//		distance = mouse_position.distanceTo(box.position);
+//		offset = mouse_position.clone().sub(box.position);
+//		effect = mouse_position.clone().sub(box.position).normalize().multiplyScalar(4).negate();
+//		box.applyCentralImpulse(effect);
+//
+//	},
