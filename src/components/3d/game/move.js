@@ -7,19 +7,21 @@ var move = {
 	event: [],
 
 	//move
-	move_speed: 0.3,
+	move_speed: 0.5,
 	left: false,
 	right: false,
 	forward: false,
 	back: false,
 	move: false,
-
+	jump: false,
+	jump_height: 0,
+	jump_enable: true,
 	//rotate
 	angelX: 0,
 	angelY: 0,
 	//		上一步的鼠标位置
 	mouse_vector: new THREE.Vector3(0, 0, 0),
-	rotate_speed: 0.003,
+	rotate_speed: 0.01,
 
 	init: function () {
 		//init const
@@ -35,23 +37,35 @@ var move = {
 
 	action: function () {
 		var me = move;
-
 		me.yuusya.__dirtyPosition = true;
 		me.yuusya.__dirtyRotation = true;
 		//移动
 		if (me.move) {
-			var vector;
+			var vector = new THREE.Vector3(0, 0, 0);
+			//化简啥的以后再说吧
 			if (me.forward) {
-				vector = new THREE.Vector3(-Math.sin(me.angelX) * me.move_speed, 0, -Math.cos(me.angelX) * me.move_speed)
+				if (Math.abs(me.yuusya.rotation.z) > 2.4)
+					vector.add(new THREE.Vector3(-Math.sin(Math.PI - me.yuusya.rotation.y) * me.move_speed, 0, -Math.cos(Math.PI - me.yuusya.rotation.y) * me.move_speed))
+				else
+					vector.add(new THREE.Vector3(-Math.sin(me.yuusya.rotation.y) * me.move_speed, 0, -Math.cos(me.yuusya.rotation.y) * me.move_speed))
 			}
 			if (me.left) {
-				vector = new THREE.Vector3(-Math.sin(me.angelX + Math.PI / 2) * me.move_speed, 0, -Math.cos(me.angelX + Math.PI / 2) * me.move_speed)
+				if (Math.abs(me.yuusya.rotation.z) > 2.4)
+					vector.sub(new THREE.Vector3(-Math.sin(-me.yuusya.rotation.y + Math.PI / 2) * me.move_speed, 0, -Math.cos(-me.yuusya.rotation.y + Math.PI / 2) * me.move_speed))
+				else
+					vector.add(new THREE.Vector3(-Math.sin(me.yuusya.rotation.y + Math.PI / 2) * me.move_speed, 0, -Math.cos(me.yuusya.rotation.y + Math.PI / 2) * me.move_speed))
 			}
 			if (me.right) {
-				vector = new THREE.Vector3(-Math.sin(me.angelX - Math.PI / 2) * me.move_speed, 0, -Math.cos(me.angelX - Math.PI / 2) * me.move_speed)
+				if (Math.abs(me.yuusya.rotation.z) > 2.4)
+					vector.sub(new THREE.Vector3(-Math.sin(-me.yuusya.rotation.y + Math.PI / 2 * 3) * me.move_speed, 0, -Math.cos(-me.yuusya.rotation.y + Math.PI / 2 * 3) * me.move_speed))
+				else
+					vector.add(new THREE.Vector3(-Math.sin(me.yuusya.rotation.y - Math.PI / 2) * me.move_speed, 0, -Math.cos(me.yuusya.rotation.y - Math.PI / 2) * me.move_speed))
 			}
 			if (me.back) {
-				vector = new THREE.Vector3(Math.sin(me.angelX) * me.move_speed, 0, Math.cos(me.angelX) * me.move_speed)
+				if (Math.abs(me.yuusya.rotation.z) > 2.4)
+					vector.add(new THREE.Vector3(Math.sin(Math.PI - me.yuusya.rotation.y) * me.move_speed, 0, Math.cos(Math.PI - me.yuusya.rotation.y) * me.move_speed))
+				else
+					vector.add(new THREE.Vector3(Math.sin(me.yuusya.rotation.y) * me.move_speed, 0, Math.cos(me.yuusya.rotation.y) * me.move_speed))
 			}
 
 			me.yuusya.position.add(vector);
@@ -59,16 +73,27 @@ var move = {
 		}
 		//转动,鼠标移到边缘后一直转动
 		if (me.mouse_vector.x > 0.9) {
-			me.yuusya.rotation.set(me.angelY, me.angelX, 0)
-			me.angelX -= (Math.PI / 2) * me.rotate_speed * 6;
+			me.yuusya.rotateOnAxis(new THREE.Vector3(0, -1, 0), me.rotate_speed * 4)
 		} else if (me.mouse_vector.x < -0.9) {
-			me.angelX += (Math.PI / 2) * me.rotate_speed * 6;
-			me.yuusya.rotation.set(me.angelY, me.angelX, 0)
+			me.yuusya.rotateOnAxis(new THREE.Vector3(0, 1, 0), me.rotate_speed * 4)
 		}
+		//跳
+		if (me.jump) {
+			me.jump_height += .1;
+			if (me.jump_height < 2) {
+				me.yuusya.position.y += .25;
+				//me.jump_height 只是一个计数器
+			} else if (me.jump_height > 10) {
+				me.jump = false
+				me.jump_enable = true;
+				me.jump_height = 0;
+			}
+		}
+
 	},
 	keyboard: function () {
 		var me = this;
-		me.event[0] = document.addEventListener('keydown', function (event) {
+		me.event[0] = function (event) {
 			switch (event.keyCode) {
 				case 65: // left
 					me.left = true;
@@ -82,13 +107,18 @@ var move = {
 				case 83: // back
 					me.back = true;
 					break;
+				case 32: // jump
+					if (me.jump_enable) {
+						me.jump = true;
+						me.jump_enable = false;
+					}
 			}
 			if (me.left || me.forward || me.right || me.back)
 				me.move = true;
+		}
+		document.addEventListener('keydown', me.event[0]);
 
-		});
-
-		me.event[1] = document.addEventListener('keyup', function (event) {
+		me.event[1] = function (event) {
 			switch (event.keyCode) {
 				case 65: // left
 					me.left = false;
@@ -106,7 +136,8 @@ var move = {
 			if (!me.left && !me.forward && !me.right && !me.back)
 				me.move = false;
 
-		});
+		}
+		document.addEventListener('keyup', me.event[1]);
 	},
 	mouse: function () {
 		var me = this;
@@ -115,25 +146,17 @@ var move = {
 			me.yuusya.__dirtyRotation = true;
 			var vector = new THREE.Vector3((event.clientX / me.dom.clientWidth) * 2 - 1, -((event.clientY / me.dom.clientHeight) * 2 - 1), 0);
 			//角度控制
-			if (vector.x > me.mouse_vector.x && vector.x <= 0.9)
-				me.angelX -= (Math.PI / 2) * me.rotate_speed;
-			else if (vector.x < me.mouse_vector.x && vector.x >= -0.9)
-				me.angelX += (Math.PI / 2) * me.rotate_speed;
+			if (vector.x > me.mouse_vector.x && Math.abs(vector.x) <= 0.9)
+				me.yuusya.rotateOnAxis(new THREE.Vector3(0, -1, 0), me.rotate_speed)
+			else if (vector.x < me.mouse_vector.x && Math.abs(vector.x) <= 0.9)
+				me.yuusya.rotateOnAxis(new THREE.Vector3(0, 1, 0), me.rotate_speed)
 
-			if (vector.y > me.mouse_vector.y) {
-				me.angelY += (Math.PI / 2) * me.rotate_speed / 2;
-				if (me.angelY > Math.PI / 6)
-					me.angelY = Math.PI / 6
+			if (vector.y > me.mouse_vector.y && vs.camera.rotation.x < Math.PI / 18)
+				vs.camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), me.rotate_speed)
+			else if (vector.y < me.mouse_vector.y && vs.camera.rotation.x > -Math.PI / 4)
+				vs.camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), me.rotate_speed)
 
-			} else if (vector.y < me.mouse_vector.y) {
-				me.angelY -= (Math.PI / 2) * me.rotate_speed / 2;
-				if (me.angelY < -Math.PI / 6)
-					me.angelY = -Math.PI / 6
-			}
-
-			me.yuusya.rotation.set(me.angelY, me.angelX, 0)
 			me.mouse_vector = vector;
-			//			console.log(me.yuusya)
 		})
 	},
 }

@@ -11,7 +11,6 @@
 </template>
 
 <script>
-	import f from './js/main'
 	import game from './js/game'
 	export default {
 		name: 'fight',
@@ -21,7 +20,6 @@
 		mounted: function() {
 			setTimeout(function() {
 				game.init();
-				f()
 			}, 1)
 		},
 		methods: {

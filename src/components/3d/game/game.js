@@ -37,7 +37,7 @@ var game = {
 
 		//set camera
 		vs.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-		vs.camera.position.copy(me.yuusya.position).add(new THREE.Vector3(0, 10, 40));
+		vs.camera.position.copy(me.yuusya.position).add(new THREE.Vector3(0, 3, 15));
 		vs.camera.lookAt(me.yuusya.position);
 		me.yuusya.add(vs.camera)
 

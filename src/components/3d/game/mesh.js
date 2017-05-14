@@ -5,7 +5,7 @@ var mesh = {
 		this.static_box();
 		this.ground();
 		//		this.crystal();
-		this.get_box();
+		//		this.get_box();
 
 	},
 	static_box: function () {
@@ -28,12 +28,12 @@ var mesh = {
 		var box = new Physijs.BoxMesh(
 			new THREE.BoxGeometry(4, 4, 4),
 			box_material,
-			0
+
 			//			new THREE.MeshNormalMaterial(),
 
 		);
 		box.castShadow = true;
-		box.receiveShadow = true;
+		//		box.receiveShadow = true;
 		box.position.set(0, 4, -1)
 		vs.mesh.push(box);
 	},
