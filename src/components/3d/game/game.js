@@ -15,7 +15,7 @@ var game = {
 		//init const
 		var me = this;
 		me.yuusya = vs.mesh[0];
-
+		vs.scene.setGravity(new THREE.Vector3(0, -30, 0));
 
 		//set canvas
 		vs.renderer = new THREE.WebGLRenderer({
@@ -37,12 +37,17 @@ var game = {
 
 		//set camera
 		vs.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-		vs.camera.position.copy(me.yuusya.position).add(new THREE.Vector3(0, 3, 15));
-		vs.camera.lookAt(me.yuusya.position);
+		//		vs.camera.position.copy(me.yuusya.position).add(new THREE.Vector3(0, 80, 100));
+		vs.camera.position.add(new THREE.Vector3(0, 5, 10));
 		me.yuusya.add(vs.camera)
 
 		//get animate
 		game.animate();
+	},
+	onWindowResize: function () {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
 	},
 
 	animate: function () {

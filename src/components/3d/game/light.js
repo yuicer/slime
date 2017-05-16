@@ -15,7 +15,7 @@ var light = {
 
 		//		vs.light[0].shadow.bias = -.0001
 		//		vs.light[1] = new THREE.PointLight(0xffffff);
-		vs.light[1] = new THREE.AmbientLight(0x666666);
+		vs.light[1] = new THREE.AmbientLight(0x333333);
 	},
 }
 

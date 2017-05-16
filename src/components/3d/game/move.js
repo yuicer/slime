@@ -7,7 +7,7 @@ var move = {
 	event: [],
 
 	//move
-	move_speed: 0.5,
+	move_speed: .4, //0.4 1分钟走完1000
 	left: false,
 	right: false,
 	forward: false,
@@ -21,7 +21,7 @@ var move = {
 	angelY: 0,
 	//		上一步的鼠标位置
 	mouse_vector: new THREE.Vector3(0, 0, 0),
-	rotate_speed: 0.01,
+	rotate_speed: 0.005,
 
 	init: function () {
 		//init const
@@ -73,17 +73,23 @@ var move = {
 		}
 		//转动,鼠标移到边缘后一直转动
 		if (me.mouse_vector.x > 0.9) {
-			me.yuusya.rotateOnAxis(new THREE.Vector3(0, -1, 0), me.rotate_speed * 4)
+			me.yuusya.rotateOnAxis(new THREE.Vector3(0, -1, 0), me.rotate_speed * 6)
 		} else if (me.mouse_vector.x < -0.9) {
-			me.yuusya.rotateOnAxis(new THREE.Vector3(0, 1, 0), me.rotate_speed * 4)
+			me.yuusya.rotateOnAxis(new THREE.Vector3(0, 1, 0), me.rotate_speed * 6)
 		}
+		if (me.mouse_vector.y > 0.9 && vs.camera.rotation.x < Math.PI / 4)
+			vs.camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), me.rotate_speed * 6)
+		else if (me.mouse_vector.y < -0.9 && vs.camera.rotation.x > -Math.PI / 6)
+			vs.camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), me.rotate_speed * 6)
+
+
 		//跳
 		if (me.jump) {
 			me.jump_height += .1;
-			if (me.jump_height < 2) {
-				me.yuusya.position.y += .25;
+			if (me.jump_height < 3) {
+				me.yuusya.position.y += .15;
 				//me.jump_height 只是一个计数器
-			} else if (me.jump_height > 10) {
+			} else if (me.jump_height > 6.5) {
 				me.jump = false
 				me.jump_enable = true;
 				me.jump_height = 0;
@@ -151,9 +157,9 @@ var move = {
 			else if (vector.x < me.mouse_vector.x && Math.abs(vector.x) <= 0.9)
 				me.yuusya.rotateOnAxis(new THREE.Vector3(0, 1, 0), me.rotate_speed)
 
-			if (vector.y > me.mouse_vector.y && vs.camera.rotation.x < Math.PI / 18)
+			if (vector.y > me.mouse_vector.y && vs.camera.rotation.x < Math.PI / 4)
 				vs.camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), me.rotate_speed)
-			else if (vector.y < me.mouse_vector.y && vs.camera.rotation.x > -Math.PI / 4)
+			else if (vector.y < me.mouse_vector.y && vs.camera.rotation.x > -Math.PI / 6)
 				vs.camera.rotateOnAxis(new THREE.Vector3(-1, 0, 0), me.rotate_speed)
 
 			me.mouse_vector = vector;

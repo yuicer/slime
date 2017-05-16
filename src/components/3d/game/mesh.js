@@ -1,68 +1,176 @@
 import vm from 'src/main.js'
 var vs = vm.$store.state;
+
 var mesh = {
+	wall_material: {},
 	init: function () {
-		this.static_box();
-		this.ground();
+		this.wall_material_get();
+		this.yuusya();
+		this.maze();
+
 		//		this.crystal();
 		//		this.get_box();
-
 	},
-	static_box: function () {
-		var loader = new THREE.TextureLoader();
-
-		// Materials
-		var img2 = require('assets/3d/plywood.jpg')
-
-
-		var box_material = Physijs.createMaterial(
+	wall_material_get() {
+		var loader = new THREE.TextureLoader(),
+			img = require('assets/3d/wall.png'),
+			me = this;
+		me.wall_material = new Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
-				map: loader.load(img2),
-				side: THREE.DoubleSide
-			}),
-			.4, // low friction
-			.1 // high restitution
-		);
-		box_material.map.wrapS = box_material.map.wrapT = THREE.RepeatWrapping;
-		box_material.map.repeat.set(.25, .25);
-		var box = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(4, 4, 4),
-			box_material,
-
-			//			new THREE.MeshNormalMaterial(),
-
-		);
-		box.castShadow = true;
-		//		box.receiveShadow = true;
-		box.position.set(0, 4, -1)
-		vs.mesh.push(box);
-	},
-	ground: function () {
-		// Loader
-		var loader = new THREE.TextureLoader();
-
-		// Materials
-		var img1 = require('assets/3d/rocks.jpg')
-		var ground_material = Physijs.createMaterial(
-			new THREE.MeshLambertMaterial({
-				map: loader.load(img1),
+				map: loader.load(img),
 				side: THREE.DoubleSide
 			}),
 			.4, // low friction
 			.8 // high restitution
+		);
+		me.wall_material.map.wrapS = me.wall_material.map.wrapT = THREE.RepeatWrapping;
+		me.wall_material.map.repeat.set(2, 2);
+	},
+	yuusya: function () {
+		var yuusya = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(4, 4, 4),
+			new THREE.MeshNormalMaterial(),
 
 		);
-		ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
-		ground_material.map.repeat.set(3, 3);
-		// Ground
-		var ground = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(1000, 1, 1000),
-			ground_material,
+		yuusya.castShadow = true;
+		//		yuusya.receiveShadow = true;
+		yuusya.position.set(375 - 4, 4, 800 - 4)
+		vs.mesh.push(yuusya);
+	},
+	wall: function (type, length) {
+		var wall = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(500, 10, length),
+			mesh.wall_material,
 			0 // mass
 		);
-		ground.receiveShadow = true;
-		vs.mesh.push(ground);
+		wall.receiveShadow = true;
+		//type 0横 1竖
+		if (type)
+			wall.rotation.z = Math.PI / 2;
+		else
+			wall.rotation.set(0, Math.PI / 2, Math.PI / 2)
+		wall.position.y = 250;
+		vs.mesh.push(wall);
+		return wall
+
 	},
+	maze() {
+		var loader = new THREE.TextureLoader(),
+			img = require('assets/3d/floor1.jpg'),
+			me = this,
+			ground_material = new Physijs.createMaterial(
+				new THREE.MeshLambertMaterial({
+					map: loader.load(img),
+					side: THREE.DoubleSide
+				}),
+				.4, // low friction
+				.8 // high restitution
+			);
+		ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
+		ground_material.map.repeat.set(12, 12);
+		var me = this,
+			ground = new Physijs.BoxMesh(
+				new THREE.BoxGeometry(1000, 1, 1000),
+				ground_material,
+				0 // mass
+			);
+		ground.receiveShadow = true;
+		ground.position.set(500, 0, 500)
+		vs.mesh.push(ground);
+
+		var ground1 = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(1000, 1, 1000),
+			mesh.wall_material,
+			0 // mass
+		);
+		ground1.receiveShadow = true;
+		ground1.position.set(500, 250, 500)
+		vs.mesh.push(ground1);
+
+
+		//边界
+		var a1 = new me.wall(1, 200);
+		a1.position.add(new THREE.Vector3(350, 0, 700));
+		var a2 = new me.wall(1, 200);
+		a2.position.add(new THREE.Vector3(400, 0, 700));
+		var b1 = new me.wall(0, 150);
+		b1.position.add(new THREE.Vector3(275, 0, 600));
+		var b2 = new me.wall(0, 150);
+		b2.position.add(new THREE.Vector3(475, 0, 600));
+
+		var a8 = new me.wall(1, 600);
+		a8.position.add(new THREE.Vector3(550, 0, 300));
+
+		var b5 = new me.wall(0, 100);
+		b5.position.add(new THREE.Vector3(150, 0, 450));
+		var a3 = new me.wall(1, 150);
+		a3.position.add(new THREE.Vector3(200, 0, 525));
+
+		//正方形
+		var b3 = new me.wall(0, 100);
+		b3.position.add(new THREE.Vector3(300, 0, 550));
+		var a5 = new me.wall(1, 100);
+		a5.position.add(new THREE.Vector3(350, 0, 500));
+		var b6 = new me.wall(0, 100);
+		b6.position.add(new THREE.Vector3(300, 0, 450));
+		var a4 = new me.wall(1, 100);
+		a4.position.add(new THREE.Vector3(250, 0, 500));
+		//正方形
+		var b4 = new me.wall(0, 100);
+		b4.position.add(new THREE.Vector3(450, 0, 550));
+		var a7 = new me.wall(1, 100);
+		a7.position.add(new THREE.Vector3(500, 0, 500));
+		var b7 = new me.wall(0, 100);
+		b7.position.add(new THREE.Vector3(450, 0, 450));
+		var a6 = new me.wall(1, 100);
+		a6.position.add(new THREE.Vector3(400, 0, 500));
+
+		var a9 = new me.wall(1, 150);
+		a9.position.add(new THREE.Vector3(100, 0, 375));
+		var a10 = new me.wall(1, 100);
+		a10.position.add(new THREE.Vector3(150, 0, 350));
+		var a11 = new me.wall(1, 100);
+		a11.position.add(new THREE.Vector3(500, 0, 350));
+
+		var b8 = new me.wall(0, 350);
+		b8.position.add(new THREE.Vector3(325, 0, 400));
+		var b10 = new me.wall(0, 350);
+		b10.position.add(new THREE.Vector3(325, 0, 300));
+		var b9 = new me.wall(0, 100);
+		b9.position.add(new THREE.Vector3(50, 0, 300));
+
+		var b11 = new me.wall(0, 300);
+		b11.position.add(new THREE.Vector3(200, 0, 250));
+		var b12 = new me.wall(0, 100);
+		b12.position.add(new THREE.Vector3(450, 0, 250));
+		var b13 = new me.wall(0, 100);
+		b13.position.add(new THREE.Vector3(375, 0, 100));
+		var b14 = new me.wall(0, 250);
+		b14.position.add(new THREE.Vector3(175, 0, 50));
+		var b15 = new me.wall(0, 50);
+		b15.position.add(new THREE.Vector3(475, 0, 50));
+
+		var a12 = new me.wall(1, 300);
+		a12.position.add(new THREE.Vector3(0, 0, 150));
+		var a13 = new me.wall(1, 200);
+		a13.position.add(new THREE.Vector3(50, 0, 150));
+		var a14 = new me.wall(1, 150);
+		a14.position.add(new THREE.Vector3(350, 0, 175));
+		var a15 = new me.wall(1, 150);
+		a15.position.add(new THREE.Vector3(400, 0, 175));
+		var a16 = new me.wall(1, 200);
+		a16.position.add(new THREE.Vector3(500, 0, 150));
+
+		var a17 = new me.wall(1, 50);
+		a17.position.add(new THREE.Vector3(300, 0, 25));
+		var a18 = new me.wall(1, 50);
+		a18.position.add(new THREE.Vector3(450, 0, 25));
+		var b16 = new me.wall(0, 300);
+		b16.position.add(new THREE.Vector3(150, 0, 0));
+		var b17 = new me.wall(0, 100);
+		b17.position.add(new THREE.Vector3(500, 0, 0));
+	},
+
 	get_box: function () {
 		// Loader
 		var loader = new THREE.TextureLoader();
@@ -116,9 +224,6 @@ var mesh = {
 		box1.castShadow = true;
 		box1.receiveShadow = true;
 		vs.mesh.push(box1);
-
-
-
 
 	},
 	crystal: function () {
@@ -182,7 +287,6 @@ var mesh = {
 				1
 			);
 		}
-
 	},
 	test: function () {
 		// Materials
@@ -195,7 +299,8 @@ var mesh = {
 		//		ground_material.map.repeat.set(2.5, 2.5);
 
 		var ground_geometry = new THREE.PlaneGeometry(75, 75, 50, 50);
-		for (var i = 0; i < ground_geometry.vertices.length; i++) {
+		for (var i = 0; i < ground_geometry.vertices.length; i += 9) {
+			//			i += Math.floor((Math.random() * 9)) + 1;
 			var vertex = ground_geometry.vertices[i];
 			vertex.z = Math.random() * 5
 
@@ -203,17 +308,18 @@ var mesh = {
 		ground_geometry.computeFaceNormals();
 		ground_geometry.computeVertexNormals();
 
-		var ground = new Physijs.ConcaveMesh(
+		var ground = new Physijs.ConvexMesh(
 			ground_geometry,
 			ground_material,
 			0, // mass
 		);
 		ground.rotation.x = Math.PI / -2;
 		ground.scale.set(2, 2, 2)
+		ground.castShadowShadow = true;
 		ground.receiveShadow = true;
 		ground.position.y = 30;
 		vs.mesh.push(ground)
-	}
+	},
 }
 
 //加载外部模型
