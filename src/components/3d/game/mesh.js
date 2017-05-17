@@ -3,9 +3,10 @@ var vs = vm.$store.state;
 
 var mesh = {
 	wall_material: {},
-	init: function () {
+	init() {
 		this.wall_material_get();
 		this.yuusya();
+		this.slime();
 		this.maze();
 
 		//		this.crystal();
@@ -26,7 +27,7 @@ var mesh = {
 		me.wall_material.map.wrapS = me.wall_material.map.wrapT = THREE.RepeatWrapping;
 		me.wall_material.map.repeat.set(2, 2);
 	},
-	yuusya: function () {
+	yuusya() {
 		var yuusya = new Physijs.BoxMesh(
 			new THREE.BoxGeometry(4, 4, 4),
 			new THREE.MeshNormalMaterial(),
@@ -34,10 +35,21 @@ var mesh = {
 		);
 		yuusya.castShadow = true;
 		//		yuusya.receiveShadow = true;
-		yuusya.position.set(375 - 4, 4, 800 - 4)
+		yuusya.position.set(375, 4, 200 - 4)
 		vs.mesh.push(yuusya);
 	},
-	wall: function (type, length) {
+	slime() {
+		var slime = new Physijs.BoxMesh(
+			new THREE.BoxGeometry(40, 100, 50),
+			new THREE.MeshNormalMaterial(),
+			0
+		);
+		slime.castShadow = true;
+		//		yuusya.receiveShadow = true;
+		slime.position.set(375, 4, 120 + 5) //z = 800+5
+		vs.mesh.push(slime);
+	},
+	wall(type, length) {
 		var wall = new Physijs.BoxMesh(
 			new THREE.BoxGeometry(500, 10, length),
 			mesh.wall_material,

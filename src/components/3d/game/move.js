@@ -1,4 +1,5 @@
 import vm from 'src/main.js'
+import text from 'src/script/text.js'
 var vs = vm.$store.state;
 
 var move = {
@@ -39,6 +40,7 @@ var move = {
 		var me = move;
 		me.yuusya.__dirtyPosition = true;
 		me.yuusya.__dirtyRotation = true;
+
 		//移动
 		if (me.move) {
 			var vector = new THREE.Vector3(0, 0, 0);
@@ -69,8 +71,8 @@ var move = {
 			}
 
 			me.yuusya.position.add(vector);
-
 		}
+
 		//转动,鼠标移到边缘后一直转动
 		if (me.mouse_vector.x > 0.9) {
 			me.yuusya.rotateOnAxis(new THREE.Vector3(0, -1, 0), me.rotate_speed * 6)
@@ -96,7 +98,13 @@ var move = {
 			}
 		}
 
+		//判断位置出现文本
+		if (!vs.kaiwa_show && me.yuusya.position.z < 250 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350)
+			if (text[0]['a2'][text[0]['a2'].length - 1] != '')
+				vs.kaiwa(0, 'a2')
+
 	},
+	//绑定事件
 	keyboard: function () {
 		var me = this;
 		me.event[0] = function (event) {

@@ -1,6 +1,8 @@
 <template>
     <div @click="test">
-<!--       <kaiwa :direct="'up'" :chaptor="chaptor" :section="section" :speed="speed"></kaiwa>-->
+      <transition name="fade">
+     	 <kaiwa v-show="$store.state.kaiwa_show"></kaiwa>
+      </transition>
        <canvas id="canvas"></canvas>
     </div>
 </template>
@@ -10,7 +12,6 @@
 	import game from './game/game.js'
 	//为了清除绑的事件
 	import move from './game/move.js'
-
 	export default {
 		name: 'game',
 		data() {
@@ -23,7 +24,12 @@
 		components: {
 			kaiwa,
 		},
-
+		watch: {
+			move: function() {
+				console.log(111)
+			},
+			deep: true
+		},
 		mounted: function() {
 			game.init();
 		},
