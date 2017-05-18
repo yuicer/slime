@@ -34,6 +34,7 @@ const router = new VueRouter({
 
 const store = new VueX.Store({
 	state: {
+		//3d parameter
 		scene: new Physijs.Scene,
 		camera: {},
 		renderer: {},
@@ -41,16 +42,19 @@ const store = new VueX.Store({
 		material: [],
 		mesh: [],
 		light: [],
+
+		//game
+		death: 5,
 		//kaiwa
-		direct: 'up',
 		speed: 100,
 		text: "",
 		now_text: [],
 		kaiwa_show: false,
-		kaiwa: function (chaptor, section) {
+		kaiwa: function (chaptor, section, speed) {
 			var me = this;
 			me.now_text = '';
 			me.kaiwa_show = true;
+			me.speed = speed;
 			me.now_text = text[chaptor][section].concat();
 			text[chaptor][section].push('');
 			me.Even(0);
@@ -68,7 +72,7 @@ const store = new VueX.Store({
 					if (me.now_text.length > i + 1)
 						setTimeout(function () {
 							me.Even(i + 1);
-						}, 1500)
+						}, 1000)
 					clearInterval(d);
 					if (me.now_text.length - 1 == i)
 						setTimeout(function () {

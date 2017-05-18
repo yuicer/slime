@@ -35,7 +35,7 @@ var mesh = {
 		);
 		yuusya.castShadow = true;
 		//		yuusya.receiveShadow = true;
-		yuusya.position.set(375, 4, 200 - 4)
+		yuusya.position.set(375, 4, 800 - 4)
 		vs.mesh.push(yuusya);
 	},
 	slime() {

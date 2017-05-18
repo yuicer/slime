@@ -1,9 +1,9 @@
 <template>
-    <div @click="test">
+    <div>
       <transition name="fade">
      	 <kaiwa v-show="$store.state.kaiwa_show"></kaiwa>
       </transition>
-       <canvas id="canvas"></canvas>
+       <canvas tabindex="0" id="canvas"></canvas>
     </div>
 </template>
 
@@ -16,43 +16,32 @@
 		name: 'game',
 		data() {
 			return {
-				chaptor: "",
-				section: "",
-				speed: 150,
+
 			}
 		},
 		components: {
 			kaiwa,
 		},
-		watch: {
-			move: function() {
-				console.log(111)
-			},
-			deep: true
-		},
+
 		mounted: function() {
 			game.init();
 		},
-		methods: {
-			test: function() {
-				this.chaptor = 0;
-				this.section = "a" + 2;
-				this.speed = 100;
-			},
-		},
+
 		beforeRouteLeave(to, from, next) {
 			this.$store.state.scene.removeEventListener('update', move.action);
-			document.removeEventListener('keydown', move.event[0]);
-			document.removeEventListener('keyup', move.event[1]);
 			next()
 		},
 		beforeRouteEnter(to, from, next) {
 			next(vm => {
 				if (to.path == '/game' && from.path == '/game_fight') {
-					document.addEventListener('keydown', move.event[0]);
-					document.addEventListener('keyup', move.event[1]);
+					if (vm.$store.state.death) {
+						vm.$store.state.mesh[0].__dirtyPosition = true;
+						vm.$store.state.mesh[0].__dirtyRotation = true;
+						vm.$store.state.mesh[0].position.z = 750;
+					}
 					vm.$store.state.scene.addEventListener('update', move.action);
 				}
+				document.getElementById("canvas").focus();
 			})
 
 		}

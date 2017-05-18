@@ -1,3 +1,5 @@
+import vm from 'src/main.js'
+var vs = vm.$store.state;
 import img from './img.js'
 import slime from './slime.js'
 import yuusya from './yuusya.js'
@@ -19,11 +21,6 @@ var game = {
 		me.win = false;
 		me.frame = 0;
 		me.rAF = {};
-
-		//canvas未获得焦点之前，即游戏未开始的等待界面；
-		//		me.ctx.fillStyle = "#aaa";
-		//		me.ctx.fillRect(0, 0, 800, 600);
-		//		me.ctx.globalCompositeOperation = "source-over";
 		me.game_start();
 
 	},
@@ -48,7 +45,7 @@ var game = {
 	bg_draw: function () {
 		var me = game;
 
-		me.ctx.drawImage(img.bg, 0, 0, 800, 600);
+		me.ctx.drawImage(img.bg, 0, 0, 1000, 800);
 
 	},
 	game_start: function () {
@@ -61,7 +58,7 @@ var game = {
 		start_img.src = test;
 		//        start_img.src = "../game_img/start_bg.png";
 		start_img.onload = function () {
-			me.ctx.drawImage(start_img, 0, 0, 800, 600);
+			me.ctx.drawImage(start_img, 0, 0, 1000, 800);
 		}
 
 		//这里添加一个点击事件用来获取canvas焦点，但是为了和后面游戏的控制分开，所以用event事件,主要用来初始化
@@ -96,35 +93,25 @@ var game = {
 
 
 		me.ctx.fillStyle = "rgba(100,100,100," + rgba_a + ")";
-		me.ctx.fillRect(0, 0, 800, 600);
+		me.ctx.fillRect(0, 0, 1000, 800);
 		me.ctx.fillStyle = "rgba(255,255,255," + rgba_a + ")";
-		if (me.win) {
+		if (me.win)
 			me.ctx.fillText("You Win", 270, 250);
-			me.ctx.font = "18px Verdana";
-			//            me.ctx.fillText("(第二层制作中)", 570, 250);
-		} else
-			me.ctx.fillText("You Die", 270, 250);
+		else
+			me.ctx.fillText("Over", 420, 350);
 
-		me.ctx.font = "25px Verdana";
-		me.ctx.fillText("Try it again", 340, 300);
-		me.ctx.strokeStyle = "#333";
 		me.ctx.lineCap = "round"
 		me.ctx.lineWidth = 2;
 		me.ctx.beginPath();
-		me.ctx.moveTo(330, 310) //再来一次的边框
-		me.ctx.lineTo(490, 310)
+
 		me.ctx.stroke();
 		if (me.frame == 59) {
-
-			function b(e) {
-
-				if (e.offsetX > 330 && e.offsetX < 490 && e.offsetY > 270 && e.offsetY < 310) {
-					window.cancelAnimationFrame(me.rAF);
-					me.canvas.removeEventListener("click", b);
-					me.init();
-				}
+			function b() {
+				window.cancelAnimationFrame(me.rAF);
+				vs.death++;
+				vm.$router.push('/game')
 			}
-			me.canvas.addEventListener("click", b);
+			setTimeout(b, 1000)
 		}
 
 		me.frame++;

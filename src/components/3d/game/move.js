@@ -6,9 +6,9 @@ var move = {
 	yuusya: {},
 	dom: {},
 	event: [],
-
+	clock: {},
 	//move
-	move_speed: .4, //0.4 1分钟走完1000
+	move_speed: 2.4, //0.4 1分钟走完1000
 	left: false,
 	right: false,
 	forward: false,
@@ -29,7 +29,8 @@ var move = {
 		var me = this;
 		me.yuusya = vs.mesh[0];
 		me.dom = document.getElementById('canvas')
-
+		me.clock = new THREE.Clock();
+		me.clock.start();
 		move.keyboard();
 		move.mouse();
 		vs.scene.addEventListener('update', move.action);
@@ -99,10 +100,85 @@ var move = {
 		}
 
 		//判断位置出现文本
-		if (!vs.kaiwa_show && me.yuusya.position.z < 250 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350)
-			if (text[0]['a2'][text[0]['a2'].length - 1] != '')
-				vs.kaiwa(0, 'a2')
+		//探索
+		if (!vs.kaiwa_show && me.yuusya.position.z > 700 && me.yuusya.position.z < 750 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && vs.death == 0)
+			if (text[0]['a1'][text[0]['a1'].length - 1] != '') {
+				vs.kaiwa(0, 'a1', 100)
+				alert(vs.death)
+			}
 
+		//
+		if (!vs.kaiwa_show && me.yuusya.position.z > 550 && me.yuusya.position.z < 600 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && vs.death == 0)
+			if (text[0]['a2'][text[0]['a2'].length - 1] != '')
+				vs.kaiwa(0, 'a2', 100)
+
+
+		//迷宫通关，到达史莱姆
+		if (!vs.kaiwa_show && me.yuusya.position.z < 250 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350) {
+			switch (vs.death) {
+				case 0:
+					if (text[1]['a1'][text[1]['a1'].length - 1] != '')
+						vs.kaiwa(1, 'a1', 300)
+					break;
+				case 1:
+					if (text[1]['a2'][text[1]['a2'].length - 1] != '')
+						vs.kaiwa(1, 'a2', 300)
+					break;
+				case 2:
+				case 3:
+				case 4:
+					if (text[1]['a3'][text[1]['a3'].length - 1] != '')
+						vs.kaiwa(1, 'a3', 300)
+					break;
+				case 5:
+					if (text[1]['a4'][text[1]['a4'].length - 1] != '')
+						vs.kaiwa(1, 'a4', 100)
+					else if (text[1]['a5'][text[1]['a5'].length - 1] != '')
+						vs.kaiwa(1, 'a5', 300)
+					break;
+
+			}
+
+			if (me.yuusya.position.z < 230)
+				vm.$router.push('/game_fight')
+		}
+
+		//死了回到原点
+		if (!vs.kaiwa_show && me.yuusya.position.z > 700 && me.yuusya.position.z < 750 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350) {
+			switch (vs.death) {
+				case 1:
+					if (text[2]['a1'][text[2]['a1'].length - 1] != '')
+						vs.kaiwa(2, 'a1', 100)
+					break;
+				case 2:
+					if (text[2]['a2'][text[2]['a2'].length - 1] != '')
+						vs.kaiwa(2, 'a2', 100)
+					break;
+				case 3:
+				case 4:
+					if (text[2]['a3'][text[2]['a3'].length - 1] != '')
+						vs.kaiwa(2, 'a3', 100)
+					break;
+				case 5:
+					if (text[2]['a4'][text[2]['a4'].length - 1] != '')
+						vs.kaiwa(2, 'a4', 100)
+					break;
+
+			}
+		}
+
+
+		//过了很长时间没过迷宫
+		//2分钟
+		if (!vs.kaiwa_show && me.clock.getElapsedTime() > 120 && vs.death < 1)
+			if (text[3]['a1'][text[3]['a1'].length - 1] != '')
+				vs.kaiwa(3, 'a1', 100)
+		if (!vs.kaiwa_show && me.clock.getElapsedTime() > 180 && vs.death < 1)
+			if (text[3]['a2'][text[3]['a2'].length - 1] != '')
+				vs.kaiwa(3, 'a2', 100)
+		if (!vs.kaiwa_show && me.clock.getElapsedTime() > 300 && vs.death < 1)
+			if (text[3]['a3'][text[3]['a3'].length - 1] != '')
+				vs.kaiwa(3, 'a3', 100)
 	},
 	//绑定事件
 	keyboard: function () {
@@ -130,7 +206,7 @@ var move = {
 			if (me.left || me.forward || me.right || me.back)
 				me.move = true;
 		}
-		document.addEventListener('keydown', me.event[0]);
+		me.dom.addEventListener('keydown', me.event[0]);
 
 		me.event[1] = function (event) {
 			switch (event.keyCode) {
@@ -151,7 +227,7 @@ var move = {
 				me.move = false;
 
 		}
-		document.addEventListener('keyup', me.event[1]);
+		me.dom.addEventListener('keyup', me.event[1]);
 	},
 	mouse: function () {
 		var me = this;

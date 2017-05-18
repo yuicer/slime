@@ -1,5 +1,5 @@
 <template>
-    <div id="box" :class="{up:$store.state.direct == 'up',down:$store.state.direct == 'down'}">
+    <div id="box">
     <section>
     	<div>{{$store.state.text}}</div>
     </section>
@@ -49,6 +49,7 @@
 <style scoped="true">
 	#box {
 		position: fixed;
+		top: 0;
 		width: 100vw;
 		height: 16vh;
 		background: translate;
@@ -57,7 +58,7 @@
 	
 	section {
 		width: 60vw;
-		height: 80%;
+		min-height: 80%;
 		margin: auto;
 		padding: 1.5vh;
 		text-align: left;
@@ -70,14 +71,6 @@
 	
 	section>div {
 		word-break: break-all;
-	}
-	
-	.up {
-		top: 0;
-	}
-	
-	.down {
-		bottom: 0;
 	}
 
 </style>
