@@ -101,20 +101,19 @@ var move = {
 
 		//判断位置出现文本
 		//探索
-		if (!vs.kaiwa_show && me.yuusya.position.z > 700 && me.yuusya.position.z < 750 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && vs.death == 0)
+		if (!vs.kaiwa_show && me.yuusya.position.z > 700 && me.yuusya.position.z < 750 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && vs.death == 0 && !vs.win)
 			if (text[0]['a1'][text[0]['a1'].length - 1] != '') {
 				vs.kaiwa(0, 'a1', 100)
-				alert(vs.death)
 			}
 
 		//
-		if (!vs.kaiwa_show && me.yuusya.position.z > 550 && me.yuusya.position.z < 600 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && vs.death == 0)
+		if (!vs.kaiwa_show && me.yuusya.position.z > 550 && me.yuusya.position.z < 600 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && vs.death == 0 && !vs.win)
 			if (text[0]['a2'][text[0]['a2'].length - 1] != '')
 				vs.kaiwa(0, 'a2', 100)
 
 
 		//迷宫通关，到达史莱姆
-		if (!vs.kaiwa_show && me.yuusya.position.z < 250 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350) {
+		if (!vs.kaiwa_show && me.yuusya.position.z < 250 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && !vs.win) {
 			switch (vs.death) {
 				case 0:
 					if (text[1]['a1'][text[1]['a1'].length - 1] != '')
@@ -144,7 +143,7 @@ var move = {
 		}
 
 		//死了回到原点
-		if (!vs.kaiwa_show && me.yuusya.position.z > 700 && me.yuusya.position.z < 750 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350) {
+		if (!vs.kaiwa_show && me.yuusya.position.z > 700 && me.yuusya.position.z < 750 && me.yuusya.position.x < 400 && me.yuusya.position.x > 350 && !vs.win) {
 			switch (vs.death) {
 				case 1:
 					if (text[2]['a1'][text[2]['a1'].length - 1] != '')
@@ -163,22 +162,51 @@ var move = {
 					if (text[2]['a4'][text[2]['a4'].length - 1] != '')
 						vs.kaiwa(2, 'a4', 100)
 					break;
-
 			}
 		}
 
 
 		//过了很长时间没过迷宫
 		//2分钟
-		if (!vs.kaiwa_show && me.clock.getElapsedTime() > 120 && vs.death < 1)
-			if (text[3]['a1'][text[3]['a1'].length - 1] != '')
-				vs.kaiwa(3, 'a1', 100)
-		if (!vs.kaiwa_show && me.clock.getElapsedTime() > 180 && vs.death < 1)
-			if (text[3]['a2'][text[3]['a2'].length - 1] != '')
-				vs.kaiwa(3, 'a2', 100)
-		if (!vs.kaiwa_show && me.clock.getElapsedTime() > 300 && vs.death < 1)
-			if (text[3]['a3'][text[3]['a3'].length - 1] != '')
-				vs.kaiwa(3, 'a3', 100)
+		if (!vs.kaiwa_show && vs.death < 1 && !vs.win) {
+			if (me.clock.getElapsedTime() > 300)
+				if (text[3]['a1'][text[3]['a1'].length - 1] != '')
+					vs.kaiwa(3, 'a1', 100)
+			else if (text[3]['a1'][text[3]['a1'].length - 1] == '') {
+				vs.lost = true;
+				vm.$router.push('/start')
+			} else if (me.clock.getElapsedTime() > 180)
+				if (text[3]['a2'][text[3]['a2'].length - 1] != '')
+					vs.kaiwa(3, 'a2', 100)
+			else if (me.clock.getElapsedTime() > 120)
+				if (text[3]['a3'][text[3]['a3'].length - 1] != '')
+					vs.kaiwa(3, 'a3', 100)
+
+		}
+
+		if (vs.win && !vs.kaiwa_show) {
+			if (text[4]['a1'][text[4]['a1'].length - 1] != '')
+				vs.kaiwa(4, 'a1', 300)
+			else if (text[4]['a2'][text[4]['a2'].length - 1] != '')
+				vs.kaiwa(4, 'a2', 100)
+			else if (text[4]['a3'][text[4]['a3'].length - 1] != '')
+				vs.kaiwa(4, 'a3', 300)
+			else if (text[4]['a4'][text[4]['a4'].length - 1] != '')
+				vs.kaiwa(4, 'a4', 100)
+			else if (text[4]['a5'][text[4]['a5'].length - 1] != '')
+				vs.kaiwa(4, 'a5', 200)
+			else
+				vm.$router.push('/start')
+		}
+		if (vs.mercy == 2 && !vs.kaiwa_show) {
+			if (text[5]['a1'][text[5]['a1'].length - 1] != '')
+				vs.kaiwa(5, 'a1', 280)
+			else if (text[5]['a2'][text[5]['a2'].length - 1] != '') {
+				vs.kaiwa(5, 'a2', 200)
+				vm.$router.push('/start')
+			}
+		}
+
 	},
 	//绑定事件
 	keyboard: function () {

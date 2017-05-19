@@ -44,7 +44,10 @@ const store = new VueX.Store({
 		light: [],
 
 		//game
-		death: 5,
+		death: 0,
+		win: false,
+		lost: false,
+		mercy: 2,
 		//kaiwa
 		speed: 100,
 		text: "",

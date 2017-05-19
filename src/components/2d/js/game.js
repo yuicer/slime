@@ -95,9 +95,10 @@ var game = {
 		me.ctx.fillStyle = "rgba(100,100,100," + rgba_a + ")";
 		me.ctx.fillRect(0, 0, 1000, 800);
 		me.ctx.fillStyle = "rgba(255,255,255," + rgba_a + ")";
-		if (me.win)
-			me.ctx.fillText("You Win", 270, 250);
-		else
+		if (me.win) {
+			me.ctx.fillText("You Win", 370, 350);
+			vs.win = true;
+		} else
 			me.ctx.fillText("Over", 420, 350);
 
 		me.ctx.lineCap = "round"
@@ -109,6 +110,8 @@ var game = {
 			function b() {
 				window.cancelAnimationFrame(me.rAF);
 				vs.death++;
+				if (slime.hp == 10)
+					vs.mercy++;
 				vm.$router.push('/game')
 			}
 			setTimeout(b, 1000)
