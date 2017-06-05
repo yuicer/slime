@@ -2,7 +2,7 @@
     <div>
         <img v-if="!$store.state.win" src="~assets/d/slime.png" alt="">
         <img v-else src="~assets/d/yuusya.png" alt="">
-        <h1 v-if="!$store.state.win & !$store.state.mercy" @click="jump">start</h1>
+        <h1 v-if="!$store.state.win & !$store.state.mercy &!$store.state.lost" @click="jump">start</h1>
 <!--结局1-->
         <h2 v-if="$store.state.win">镇民们给了你丰厚的报酬，不过对于你的问题都摇头说不知道，镇民们全体都出来为你送行，站在村口目送你离开，一直到你走的很远之后，他们才四散而去。</h2>
         <h2 v-if="$store.state.win">一年以后你在别的酒馆偶然听到别人在讨论这个城镇，

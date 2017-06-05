@@ -27,7 +27,32 @@
 
 </script>
 
-<style scoped="true" src="./css/main.css">
-
+<style scoped="true">
+	body {
+		background: pink;
+	}
+	
+	#section3 {
+		background: #333;
+		color: white;
+		font-family: "微软雅黑";
+		font-size: 18px;
+		width: 100vw;
+		height: 100vh;
+	}
+	
+	#canvas {
+		position: absolute;
+		left: calc(50% - 500px);
+		top: calc(50% - 400px);
+	}
+	
+	#game_intro {
+		width: 550px;
+		text-align: center;
+		position: fixed;
+		left: calc(50% - 275px);
+		bottom: 10px;
+	}
 
 </style>

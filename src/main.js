@@ -21,6 +21,7 @@ const router = new VueRouter({
 			path: '/',
 			component: Start,
              },
+
 		{
 			path: '/game',
 			component: Game,
@@ -45,9 +46,9 @@ const store = new VueX.Store({
 
 		//game
 		death: 0,
-		win: false,
+		win: true,
 		lost: false,
-		mercy: 2,
+		mercy: 0,
 		//kaiwa
 		speed: 100,
 		text: "",

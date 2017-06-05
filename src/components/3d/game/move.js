@@ -8,7 +8,7 @@ var move = {
 	event: [],
 	clock: {},
 	//move
-	move_speed: 2.4, //0.4 1分钟走完1000
+	move_speed: 0.4, //0.4 1分钟走完1000
 	left: false,
 	right: false,
 	forward: false,
@@ -138,8 +138,14 @@ var move = {
 
 			}
 
-			if (me.yuusya.position.z < 230)
+			if (me.yuusya.position.z < 230) {
+				me.move = false;
+				me.forward = false;
+				me.left = false;
+				me.right = false;
+				me.back = false;
 				vm.$router.push('/game_fight')
+			}
 		}
 
 		//死了回到原点
@@ -174,7 +180,7 @@ var move = {
 					vs.kaiwa(3, 'a1', 100)
 			else if (text[3]['a1'][text[3]['a1'].length - 1] == '') {
 				vs.lost = true;
-				vm.$router.push('/start')
+				vm.$router.push('/')
 			} else if (me.clock.getElapsedTime() > 180)
 				if (text[3]['a2'][text[3]['a2'].length - 1] != '')
 					vs.kaiwa(3, 'a2', 100)
@@ -196,14 +202,14 @@ var move = {
 			else if (text[4]['a5'][text[4]['a5'].length - 1] != '')
 				vs.kaiwa(4, 'a5', 200)
 			else
-				vm.$router.push('/start')
+				vm.$router.push('/')
 		}
 		if (vs.mercy == 2 && !vs.kaiwa_show) {
 			if (text[5]['a1'][text[5]['a1'].length - 1] != '')
 				vs.kaiwa(5, 'a1', 280)
 			else if (text[5]['a2'][text[5]['a2'].length - 1] != '') {
 				vs.kaiwa(5, 'a2', 200)
-				vm.$router.push('/start')
+				vm.$router.push('/')
 			}
 		}
 

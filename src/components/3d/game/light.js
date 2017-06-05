@@ -2,20 +2,19 @@ import vm from 'src/main.js'
 var vs = vm.$store.state;
 var light = {
 	init: function () {
-		vs.light[0] = new THREE.DirectionalLight(0xfaeaef);
-		vs.light[0].position.set(20, 40, 0);
-		//		vs.light[0].target.position.copy(vs.scene.position);
-		vs.light[0].castShadow = true;
-		vs.light[0].shadow.camera.left = -160;
-		vs.light[0].shadow.camera.top = -160;
-		vs.light[0].shadow.camera.right = 160;
-		vs.light[0].shadow.camera.bottom = 160;
-		vs.light[0].shadow.mapSize.width = vs.light[0].shadow.mapSize.height = 1024;
+		var spotlight = new THREE.SpotLight(0xffffff);
+		spotlight.castShadow = true;
+		spotlight.shadow.camera.left = -160;
+		spotlight.shadow.camera.top = -160;
+		spotlight.shadow.camera.right = 160;
+		spotlight.shadow.camera.bottom = 160;
+		spotlight.shadow.mapSize.width = spotlight.shadow.mapSize.height = 1024;
+		//		spotlight.position.set(vs.mesh[1].position.x, vs.mesh[1].position.y, vs.mesh[1].position.z + 30);
+		spotlight.angle = Math.PI / 6;
+		spotlight.target = vs.mesh[0];
+		//		vs.light[0] = spotlight;
 
-
-		//		vs.light[0].shadow.bias = -.0001
-		//		vs.light[1] = new THREE.PointLight(0xffffff);
-		vs.light[1] = new THREE.AmbientLight(0x333333);
+		vs.light[0] = new THREE.AmbientLight(0x666666);
 	},
 }
 

@@ -60,13 +60,13 @@ var img = {
 					game.ctx.lineCap = "round";
 					game.ctx.strokeStyle = '#fff';
 					game.ctx.beginPath();
-					game.ctx.moveTo(200, 550);
-					game.ctx.lineTo(630, 550);
+					game.ctx.moveTo(400, 550);
+					game.ctx.lineTo(830, 550);
 					game.ctx.stroke();
 					game.ctx.beginPath();
 					game.ctx.strokeStyle = '#000';
-					game.ctx.moveTo(200, 550);
-					game.ctx.lineTo(me.number / me.src.length * 400 + 230, 550);
+					game.ctx.moveTo(400, 550);
+					game.ctx.lineTo(me.number / me.src.length * 600 + 230, 550);
 					game.ctx.stroke();
 				}
 				img[k].src = me.src[i];

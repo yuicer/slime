@@ -9,8 +9,8 @@ var vs = vm.$store.state;
 var game = {
 	yuusya: {},
 	init: function () {
-		light.init();
 		mesh.init();
+		light.init();
 		move.init();
 		//init const
 		var me = this;
@@ -53,7 +53,6 @@ var game = {
 	animate: function () {
 		vs.scene.simulate();
 		vs.renderer.render(vs.scene, vs.camera);
-
 		requestAnimationFrame(game.animate);
 	}
 }

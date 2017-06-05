@@ -28,26 +28,57 @@ var mesh = {
 		me.wall_material.map.repeat.set(2, 2);
 	},
 	yuusya() {
+
+		var material = new THREE.MeshNormalMaterial();
+		material.visible = false;
 		var yuusya = new Physijs.BoxMesh(
 			new THREE.BoxGeometry(4, 4, 4),
-			new THREE.MeshNormalMaterial(),
+			material
 
 		);
 		yuusya.castShadow = true;
 		//		yuusya.receiveShadow = true;
-		yuusya.position.set(375, 4, 800 - 4)
+		yuusya.position.set(375, 4, 800 - 20)
+
+		var mtlLoader = new THREE.MTLLoader();
+		mtlLoader.setPath('static/');
+		mtlLoader.load('Gohan.mtl', function (materials) {
+			materials.preload();
+			var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials(materials);
+			objLoader.load('static/Gohan.obj', function (obj) {
+				obj.scale.set(.2, .2, .2);
+				obj.rotation.y = Math.PI;
+				obj.position.y = -2;
+				obj.traverse(function (child) {
+					if (child instanceof THREE.Mesh) {
+						yuusya.add(obj);
+					}
+				});
+			});
+		});
 		vs.mesh.push(yuusya);
 	},
 	slime() {
+		var material = new THREE.MeshNormalMaterial();
+		//		material.visible = false;
 		var slime = new Physijs.BoxMesh(
 			new THREE.BoxGeometry(40, 100, 50),
-			new THREE.MeshNormalMaterial(),
+			material,
 			0
 		);
+		//		var objloader = new THREE.OBJLoader();
+		//		objloader.load('static/un.obj', function (obj) {
+		//			obj.traverse(function (child) {
+		//				if (child instanceof THREE.Mesh) {
+		//					slime.add(obj);
+		//				}
+		//			});
 		slime.castShadow = true;
 		//		yuusya.receiveShadow = true;
 		slime.position.set(375, 4, 120 + 5) //z = 800+5
 		vs.mesh.push(slime);
+
 	},
 	wall(type, length) {
 		var wall = new Physijs.BoxMesh(
@@ -56,6 +87,7 @@ var mesh = {
 			0 // mass
 		);
 		wall.receiveShadow = true;
+		wall.castShadow = true;
 		//type 0横 1竖
 		if (type)
 			wall.rotation.z = Math.PI / 2;
@@ -100,6 +132,8 @@ var mesh = {
 		vs.mesh.push(ground1);
 
 
+		var b0 = new me.wall(0, 50);
+		b0.position.add(new THREE.Vector3(375, 0, 800));
 		//边界
 		var a1 = new me.wall(1, 200);
 		a1.position.add(new THREE.Vector3(350, 0, 700));
@@ -217,25 +251,6 @@ var mesh = {
 		box.castShadow = true;
 		box.receiveShadow = true;
 		vs.mesh.push(box);
-
-		var box2 = new Physijs.ConvexMesh(
-			geo,
-			box_material,
-		);
-		box2.position.y = 60;
-		box2.position.x = 0;
-		box2.castShadow = true;
-		box2.receiveShadow = true;
-		vs.mesh.push(box2);
-
-		var box1 = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(10, 10, 10),
-			box_material,
-		);
-		box1.position.y = 100;
-		box1.castShadow = true;
-		box1.receiveShadow = true;
-		vs.mesh.push(box1);
 
 	},
 	crystal: function () {

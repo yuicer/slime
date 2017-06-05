@@ -38,6 +38,7 @@
 						vm.$store.state.mesh[0].__dirtyPosition = true;
 						vm.$store.state.mesh[0].__dirtyRotation = true;
 						vm.$store.state.mesh[0].position.z = 750;
+						move.move_speed += 0.1;
 					}
 					vm.$store.state.scene.addEventListener('update', move.action);
 				}
